@@ -1,4 +1,4 @@
-# Getting and Cleaning Data-Project
+# Getting and Cleaning Data---Project
 ## Data Source
 Human Activity Recognition Using Smartphones Dataset
 Version 1.0
