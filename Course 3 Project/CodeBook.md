@@ -3,7 +3,7 @@
 Human Activity Recognition Using Smartphones Dataset
 Version 1.0
 ## Data Description
-30 volunteers\
+30 volunteers'''
 Age: 19-48\
 6 activities: WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING\
 
