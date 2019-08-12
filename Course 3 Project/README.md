@@ -1,6 +1,6 @@
 # Getting and Cleaning Data---Project
 ## Sections in the R scripts
-There are 5 sections in the scripts:
+**There are 5 sections in the scripts:
 
 read label & get features<br/>
 load train<br/>
@@ -8,7 +8,8 @@ load test<br/>
 merge train & test<br/>
 convert class_labels to activity_name
 
-By during all the steps in R, the goals listed here can be achieved:
+**By doing all the steps in R, the goals listed here can be achieved:
+
 1. Merges the training and the test sets to create one data set.
 2. Extracts only the measurements on the mean and standard deviation for each measurement.
 3. Uses descriptive activity names to name the activities in the data set
