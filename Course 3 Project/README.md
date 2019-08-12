@@ -18,6 +18,6 @@ convert class_labels to activity_name
 
 ## Links:
 
-[R Scripts](https://github.com/hyzhang1016/datasciencecoursera/blob/master/Course%203%20Project/run_analysis.R)
-[Code Book](https://github.com/hyzhang1016/datasciencecoursera/blob/master/Course%203%20Project/CodeBook.md)
-[Tidy Dataset]
+[R Scripts](https://github.com/hyzhang1016/datasciencecoursera/blob/master/Course%203%20Project/run_analysis.R)<br/>
+[Code Book](https://github.com/hyzhang1016/datasciencecoursera/blob/master/Course%203%20Project/CodeBook.md)<br/>
+[Tidy Dataset](https://github.com/hyzhang1016/datasciencecoursera/blob/master/Course%203%20Project/tidy_data.txt)
