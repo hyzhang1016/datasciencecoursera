@@ -1,0 +1,112 @@
+---
+title: "Course-8_Project"
+author: "Haiyang Zhang"
+date: "10/20/2019"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Data Processing
+
+1. Import the raw data and remove columns with many NA terms.
+
+```{r}
+data.train<-read.csv("pml-training.csv")
+data.test<-read.csv("pml-testing.csv")
+
+NAcount<-nrow(data.train)/100*20
+reCol<-which(colSums(is.na(data.train)|data.train=="")>NAcount)
+
+classe_lvl<-levels(data.train$classe)
+data.train$classe<-factor(data.train$classe, classe_lvl)
+
+train<-data.frame(data.train[,-reCol])
+train<-train[,-c(1:6)]
+test<-data.frame(data.test[,-reCol])
+test<-test[,-c(1:6)]
+```
+
+2. Split training set into a sub-training set and testing part.
+
+```{r}
+set.seed(12596876)
+library(caret)
+classeInd <- which(names(train) == "classe")
+partition <- createDataPartition(y=train$classe, p=0.75, list=FALSE)
+subSetTrain <- train[partition, ]
+subSetTest <- train[-partition, ]
+```
+
+3. Try to check if there are any terms correlated to the variable classe
+```{r}
+correlations <- cor(subSetTrain[, -classeInd], as.numeric(subSetTrain$classe))
+bestCorr <- subset(as.data.frame(as.table(correlations)), abs(Freq)>0.3)
+bestCorr
+```
+There is no strong correlation between classe with other variables.
+
+## Modeling
+
+```{r}
+library(corrplot)
+correlationMx <- cor(subSetTrain[, -classeInd])
+highlyCorr <- findCorrelation(correlationMx, cutoff=0.9, exact=TRUE)
+exColumns <- c(highlyCorr, classeInd)
+corrplot(correlationMx, method="color", type="lower", order="hclust", tl.cex=0.70, tl.col="black", diag = FALSE)
+```
+
+Random Forest by using 200 trees:
+```{r}
+library(randomForest)
+ntree <- 200 
+start <- proc.time()
+rf.clean <- randomForest(
+  x=subSetTrain[, -classeInd], 
+  y=subSetTrain$classe,
+  xtest=subSetTest[, -classeInd], 
+  ytest=subSetTest$classe, 
+  ntree=ntree,
+  keep.forest=TRUE,
+  proximity=TRUE) 
+proc.time() - start
+
+start <- proc.time()
+rf.exclude <- randomForest(
+  x=subSetTrain[, -exColumns], 
+  y=subSetTrain$classe,
+  xtest=subSetTest[, -exColumns], 
+  ytest=subSetTest$classe, 
+  ntree=ntree,
+  keep.forest=TRUE,
+  proximity=TRUE) 
+proc.time() - start
+```
+## Test
+```{r}
+rf.clean
+rf.clean.acc <- round(1-sum(rf.clean$confusion[, 'class.error']),3)
+paste0("Accuracy on training: ",rf.clean.acc)
+rf.clean.testing.acc <- round(1-sum(rf.clean$test$confusion[, 'class.error']),3)
+paste0("Accuracy on testing: ",rf.clean.testing.acc)
+
+rf.exclude
+rf.exclude.acc <- round(1-sum(rf.exclude$confusion[, 'class.error']),3)
+paste0("Accuracy on training: ",rf.exclude.acc)
+rf.exclude.testing.acc <- round(1-sum(rf.exclude$test$confusion[, 'class.error']),3)
+paste0("Accuracy on testing: ",rf.exclude.testing.acc)
+```
+
+pred<-t(cbind(
+clean=as.data.frame(predict(rf.clean, test),optional=T),
+exclude=as.data.frame(predict(rf.exclude,test[,-exColumns],optional=T))
+))
+pred
+
+## Conclusion
+The second model is better with lower error and better accuracy.
