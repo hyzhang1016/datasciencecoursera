@@ -1,2 +1,2 @@
 
-Shiny App is here: http://127.0.0.1:4100
+Shiny App is here: https://hyzhang.shinyapps.io/WorldPhone/
